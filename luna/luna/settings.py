@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -114,7 +115,7 @@ ROOT_URLCONF = 'luna.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'reactapp/build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,8 +136,12 @@ WSGI_APPLICATION = 'luna.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER' : 'postgres',
+        'PASSWORD' : "postgres",
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -184,3 +189,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'reactapp/build/static')
+]
