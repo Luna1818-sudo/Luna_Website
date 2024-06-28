@@ -28,7 +28,9 @@ SECRET_KEY = 'django-insecure-xm+1o)zk!o+9%8l^=b4!9!33jzjjlo4$x5ctmj*yv5jj(hu$o_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     'account',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'rest_framework.authtoken',
     
 ]
 
@@ -51,7 +54,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
      
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     )
+   
  
 }
 
@@ -191,5 +198,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 
 STATICFILES_DIRS = [
+    # BASE_DIR / "static",
     os.path.join(BASE_DIR, 'reactapp/build/static')
 ]
