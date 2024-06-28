@@ -25,7 +25,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.username
 
-
         return token
     
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -62,7 +61,8 @@ def signup(request):
         serializer.save()
         print(serializer)
         user = User.objects.get(username = request.data['username'])
-        user.set_password(request.data['password'])
+        # user.set_password(request.data['password'])
+        user.password = request.data['password']
   
         user.save()
         token = Token.objects.create(user = user)
@@ -95,6 +95,16 @@ def account_view(request):
         all_accounts = User.objects.all()
         account_serializer = UserSerializer(all_accounts, many=True)
         return Response(account_serializer.data)
+    
+@api_view(['GET'])
+def account_detail(request, pk, format = None):
+
+    account_detail_view = User.objects.get(pk=pk)
+    if request.method == "GET":
+        account_specific_serializer = UserSerializer(account_detail_view)
+        return Response(account_specific_serializer.data)
+     
+        
 
 
 

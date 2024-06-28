@@ -15,5 +15,6 @@ urlpatterns = [
     re_path('signup',views.signup),
     re_path('test_token',views.test_token),
     path('accounts/', views.account_view),
+    path('accountseach/<int:pk>', views.account_detail),
 
 ]

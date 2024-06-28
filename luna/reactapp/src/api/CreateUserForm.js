@@ -1,25 +1,35 @@
 // src/CreateUserForm.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 function CreateUserForm() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [createdUsername, setCreatedUsername] = useState(null);  // State variable to store created username
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const response = await fetch('http://127.0.0.1:8000/api/create/signup', {
+        const hashedPassword = CryptoJS.SHA256(password).toString();
+
+        const response = await fetch('http://127.0.0.1:8000/api/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, email, password }),
+            body: JSON.stringify({
+                 username,
+                  email,
+                   password: hashedPassword 
+                }),
         });
 
         const data = await response.json();
+        console.log(response)
         if (response.ok) {
+            setCreatedUsername(username);  // Set the created username in state
             alert('User created successfully!');
         } else {
             alert('Error creating user: ' + JSON.stringify(data));
@@ -27,38 +37,45 @@ function CreateUserForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Username:</label>
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label>Email:</label>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label>Password:</label>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </div>
-            <button type="submit">Create User</button>
-            <br />
-            <Link to="/">Back to Home</Link>
-        </form>
+        <div>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label>Username:</label>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Password:</label>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+                <button type="submit">Create User</button>
+                <br />
+                <Link to="/">Back to Home</Link>
+            </form>
+            {createdUsername && (  // Conditionally render the created username
+                <div>
+                    <h3>User Created: {createdUsername}</h3>
+                </div>
+            )}
+        </div>
     );
 }
 
