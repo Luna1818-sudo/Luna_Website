@@ -42,7 +42,7 @@ def getRoutes(request):
     return Response(routes)
 
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 def login(request):
     user = get_object_or_404(User, username= request.data['username'] )
     if not user.check_password(request.data['password']):
@@ -55,9 +55,9 @@ def login(request):
     return Response({}) 
 
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 def signup(request):
-    serializer =UserSerializer(data= request.data)
+    serializer =UserSerializer(data = request.data)
     if serializer.is_valid():
         serializer.save()
         print(serializer)
@@ -86,6 +86,16 @@ def test_token(request):
     # user = User.objects.get(username = request.data['username'])
     # return Response("passed for {}".format(request.user.email))
     return Response("passed!")
+
+
+@api_view(['GET'])
+def account_view(request):
+
+    if request.method == 'GET':
+        all_accounts = User.objects.all()
+        account_serializer = UserSerializer(all_accounts, many=True)
+        return Response(account_serializer.data)
+
 
 
 
