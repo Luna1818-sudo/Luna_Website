@@ -97,9 +97,9 @@ def account_view(request):
         return Response(account_serializer.data)
     
 @api_view(['GET'])
-def account_detail(request, pk, format = None):
+def account_detail(request, username, format = None):
 
-    account_detail_view = User.objects.get(pk=pk)
+    account_detail_view = User.objects.get(username= username)
     if request.method == "GET":
         account_specific_serializer = UserSerializer(account_detail_view)
         return Response(account_specific_serializer.data)
