@@ -32,11 +32,20 @@ function CreateUserForm() {
         if (response.ok) {
             setCreatedUsername(username);  // Set the created username in state
             alert('User created successfully!');
+
+            
             
             const response_get = await fetch(`http://127.0.0.1:8000/api/accountsearch/${username}`)
             const getData = await response_get.json();
 
-            console.log(getData);
+            // console.log(getData);
+
+            // console.log(getData.password)
+
+            // const fetched_jwtid = getData.username
+            const fetched_password = getData.password
+
+            localStorage.setItem(jwtid, fetched_password)
 
             navigate(`user/${username}`)
 
