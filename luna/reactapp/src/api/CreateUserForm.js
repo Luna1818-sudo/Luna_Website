@@ -1,7 +1,7 @@
 // src/CreateUserForm.js
 import React, { useState } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
+// import CryptoJS from 'crypto-js';
 
 function CreateUserForm() {
     const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ function CreateUserForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const hashedPassword = CryptoJS.SHA256(password).toString();
+        // const hashedPassword = CryptoJS.SHA256(password).toString();
 
         const response = await fetch('http://127.0.0.1:8000/api/signup', {
             method: 'POST',
@@ -23,7 +23,7 @@ function CreateUserForm() {
             body: JSON.stringify({
                  username,
                   email,
-                   password: hashedPassword 
+                   password,
                 }),
         });
 

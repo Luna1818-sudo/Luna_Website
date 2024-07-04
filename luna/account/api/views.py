@@ -44,6 +44,8 @@ def getRoutes(request):
 @api_view(['GET','POST'])
 def login(request):
     user = get_object_or_404(User, username= request.data['username'] )
+    if not user.is_active:
+        return Response({"detail": "User account is not active."}, status=status.HTTP_400_BAD_REQUEST)
     if not user.check_password(request.data['password']):
         return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST)
     token , created = Token.objects.get_or_create(user=user)
@@ -61,14 +63,21 @@ def signup(request):
         serializer.save()
         print(serializer)
         user = User.objects.get(username = request.data['username'])
-        # user.set_password(request.data['password'])
-        user.password = request.data['password']
+        user.set_password(request.data['password'])
+        user.is_active = True
   
         user.save()
         token = Token.objects.create(user = user)
-        return Response({"token": token.key, "user": serializer.data})
-         
-   
+        
+        response_data = {
+            "token": token.key,
+            "user": {
+                "id": user.id,
+                "username": user.username
+            }
+        }
+        return Response(response_data, status=status.HTTP_201_CREATED)
+        
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
