@@ -7,6 +7,8 @@ function CreateUserForm() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [first_name, setfirst_name] = useState('');
+    const [last_name, setlast_name] = useState('');
     const [createdUsername, setCreatedUsername] = useState(null);  // State variable to store created username
     const navigate = useNavigate();
 
@@ -22,6 +24,8 @@ function CreateUserForm() {
             },
             body: JSON.stringify({
                  username,
+                 first_name,
+                 last_name,
                   email,
                    password,
                 }),
@@ -33,8 +37,6 @@ function CreateUserForm() {
             setCreatedUsername(username);  // Set the created username in state
             alert('User created successfully!');
 
-            
-            
             const response_get = await fetch(`http://127.0.0.1:8000/api/accountsearch/${username}`)
             const getData = await response_get.json();
 
@@ -45,7 +47,7 @@ function CreateUserForm() {
             // const fetched_jwtid = getData.username
             const fetched_password = getData.password
 
-            localStorage.setItem(jwtid, fetched_password)
+            localStorage.setItem('jwtid', fetched_password)
 
             navigate(`user/${username}`)
 
@@ -68,6 +70,24 @@ function CreateUserForm() {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>First Name:</label>
+                    <input
+                        type="text"
+                        value={first_name}
+                        onChange={(e) => setfirst_name(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label>Last Name:</label>
+                    <input
+                        type="text"
+                        value={last_name}
+                        onChange={(e) => setlast_name(e.target.value)}
                         required
                     />
                 </div>

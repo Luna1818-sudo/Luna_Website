@@ -7,13 +7,12 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from account.models import CustomUser
 from django.contrib.auth.models import User
-
+from django.shortcuts import HttpResponse
 from django.shortcuts import get_object_or_404
 
 
@@ -41,16 +40,18 @@ def getRoutes(request):
     return Response(routes)
 
 
-@api_view(['GET','POST'])
-def login(request):
-    user = get_object_or_404(User, username= request.data['username'] )
-    if not user.is_active:
-        return Response({"detail": "User account is not active."}, status=status.HTTP_400_BAD_REQUEST)
-    if not user.check_password(request.data['password']):
-        return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST)
-    token , created = Token.objects.get_or_create(user=user)
-    serializer = UserSerializer(instance= user)
-    return Response({"token": token.key, "user": serializer.data})
+@api_view(['GET'])
+def login(request, username, format = None):
+    user = get_object_or_404(User, username = username )
+
+    # if not user.is_active:
+    #     return Response({"detail": "User account is not active."}, status=status.HTTP_400_BAD_REQUEST)
+    # if not user.check_password(request.data['password']):
+    #     return Response({"detail": "Not found."}, status=status.HTTP_400_BAD_REQUEST)
+    # token , created = Token.objects.get_or_create(user=user)
+    # serializer = UserSerializer(instance= user)
+    # return Response({"token": token.key, "user": serializer.data})
+    return HttpResponse(f'{username}')
 
 
     return Response({}) 
